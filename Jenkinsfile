@@ -1,23 +1,20 @@
 pipeline {
-    agent any
+    aagent any
 
     stages {
-        stage('Build') {
+      stage('Build') {
             steps {
+                echo 'building'
+                
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']],           extensions: [], userRemoteConfigs: [[url: 'https://github.com/hatemsouki/pfe.git']]])
               
-                sh  
-                archiveArtifacts artifacts: '**/apptest/*.php', fingerprint: true 
-           
             }
         }
-        stage('Test') {
+          stage('test') {
             steps {
-                echo 'Testing..'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
+                echo 'test unitaire'
+                
+                sh './vendor/bin/phpunit  --log-junit results/phpunit/phpunit.xml'
             }
         }
     }
